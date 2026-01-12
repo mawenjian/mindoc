@@ -1,13 +1,13 @@
 FROM golang:bookworm AS build
 
-ARG TAG=0.0.1
+ARG TAG=1.0.0-beta
 
 # 编译-环境变量
-ENV GO111MODULE=on
-ENV GOPROXY=https://goproxy.cn,direct
-ENV CGO_ENABLED=1
-ENV GOARCH=amd64
-ENV GOOS=linux
+#ENV GO111MODULE=on
+#ENV GOPROXY=https://goproxy.cn,direct
+#ENV CGO_ENABLED=1
+#ENV GOARCH=aarch64
+#ENV GOOS=linux
 
 # 工作目录
 ADD . /go/src/github.com/mindoc-org/mindoc
@@ -16,14 +16,14 @@ WORKDIR /go/src/github.com/mindoc-org/mindoc
 # 编译
 RUN go env
 RUN go mod tidy -v
-RUN go build -v -o mindoc_linux_amd64 -ldflags "-w -s -X 'main.VERSION=$TAG' -X 'main.BUILD_TIME=`date`' -X 'main.GO_VERSION=`go version`'"
+RUN go build -v -o mindoc_linux_aarch64 -ldflags "-w -s -X 'main.VERSION=$TAG' -X 'main.BUILD_TIME=`date`' -X 'main.GO_VERSION=`go version`'"
 RUN cp conf/app.conf.example conf/app.conf
 # 清理不需要的文件
 RUN rm appveyor.yml docker-compose.yml Dockerfile .travis.yml .gitattributes .gitignore go.mod go.sum main.go README.md simsun.ttc start.sh conf/*.go
 RUN rm -rf cache commands controllers converter .git .github graphics mail models routers utils
 
 # 测试编译的mindoc是否ok
-RUN ./mindoc_linux_amd64 version
+RUN ./mindoc_linux_aarch64 version
 
 # 必要的文件复制
 ADD simsun.ttc /usr/share/fonts/win/
@@ -40,7 +40,7 @@ WORKDIR /mindoc
 
 # 文件复制
 COPY --from=build /usr/share/fonts/win/simsun.ttc /usr/share/fonts/win/
-COPY --from=build /go/src/github.com/mindoc-org/mindoc/mindoc_linux_amd64 /mindoc/
+COPY --from=build /go/src/github.com/mindoc-org/mindoc/mindoc_linux_aarch64 /mindoc/
 COPY --from=build /go/src/github.com/mindoc-org/mindoc/start.sh /mindoc/
 COPY --from=build /go/src/github.com/mindoc-org/mindoc/LICENSE.md /mindoc/
 # 文件夹复制
@@ -83,8 +83,8 @@ RUN apt-get install -y --no-install-recommends \
         libglx0 libegl1 libnss3 libxcomposite1 libxkbcommon0 libxdamage1 libxrandr-dev libopengl0 libxtst6 libasound2t64 libxkbfile1\
         wget xz-utils && \
     mkdir -p /tmp/calibre-cache /opt/calibre && \
-    wget -O /tmp/calibre-cache/calibre-x86_64.txz -c https://download.calibre-ebook.com/7.26.0/calibre-7.26.0-x86_64.txz  --no-check-certificate && \
-    tar xJof /tmp/calibre-cache/calibre-x86_64.txz -C /opt/calibre && \
+    wget -O /tmp/calibre-cache/calibre-arm64.txz -c https://download.calibre-ebook.com/7.26.0/calibre-7.26.0-arm64.txz  --no-check-certificate && \
+    tar xJof /tmp/calibre-cache/calibre-arm64.txz -C /opt/calibre && \
     rm -rf /tmp/calibre-cache && \
     apt-get clean && rm -rf /var/lib/apt/lists/*
 
