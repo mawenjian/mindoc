@@ -18,10 +18,10 @@ if [[ -z "$(ls -A -- "/mindoc/uploads")" ]] ; then cp -r "/mindoc/__default_asse
 cp --no-clobber /mindoc/conf/app.conf.example /mindoc/conf/app.conf
 
 # 数据库等初始化
-/mindoc/mindoc_linux_amd64 install
+/mindoc/mindoc_linux_aarch64 install
 
 # 运行
-/mindoc/mindoc_linux_amd64
+/mindoc/mindoc_linux_aarch64
 
 # # Debug Dockerfile
 # while [ 1 ]

@@ -31,6 +31,20 @@
                             <textarea style="display:none;" name="configFileTextArea">{{.ConfigContent}}</textarea>
                         </div>
 
+                        <!-- 添加到配置表单中 -->
+                        <div class="form-group">
+                          <label class="col-sm-2 control-label">Elasticsearch 启用</label>
+                          <div class="col-sm-10">
+                            <input type="checkbox" name="es_enabled" value="1" {{if .EsEnabled}}checked{{end}}>
+                          </div>
+                        </div>
+                        <div class="form-group">
+                          <label class="col-sm-2 control-label">服务地址</label>
+                          <div class="col-sm-10">
+                            <input type="text" class="form-control" name="es_addresses" value="{{.EsAddresses}}">
+                          </div>
+                        </div>
+
                         <div class="form-group">
                             <button type="submit" id="btnSaveConfigFile" class="btn btn-success" data-loading-text="{{i18n .Lang "message.processing"}}">{{i18n .Lang "common.save"}}</button>
                             <span id="form-error-message" class="error-message"></span>

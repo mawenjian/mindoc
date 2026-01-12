@@ -60,3 +60,7 @@ require (
 	gopkg.in/yaml.v2 v2.4.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 )
+require (
+  github.com/elastic/go-elasticsearch/v8 v8.11.3
+  github.com/elastic/go-elasticsearch/v8/esapi v8.11.3
+)

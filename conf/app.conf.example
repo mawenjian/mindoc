@@ -252,3 +252,11 @@ default_lang="zh-cn"
 # MCP Server 功能
 enable_mcp_server="${MINDOC_ENABLE_MCP_SERVER||false}"
 mcp_api_key="${MINDOC_MCP_API_KEY||demo-mcp-api-key}"
+
+[elasticsearch]
+enabled = true
+addresses = http://127.0.0.1:9200
+username = elastic
+password = changeme
+index_prefix = mindoc_
+

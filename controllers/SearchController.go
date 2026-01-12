@@ -39,7 +39,22 @@ func (c *SearchController) Index() {
 		if c.Member != nil {
 			memberId = c.Member.MemberId
 		}
-		searchResult, totalCount, err := models.NewDocumentSearchResult().FindToPager(sqltil.EscapeLike(keyword), pageIndex, conf.PageSize, memberId)
+		// searchResult, totalCount, err := models.NewDocumentSearchResult().FindToPager(sqltil.EscapeLike(keyword), pageIndex, conf.PageSize, memberId)
+		// 代码片段建议添加到SearchController.go:42
+		var searchResult interface{}
+		if conf.Elasticsearch.Enabled && len(keyword) > 1 {
+		    // 使用ES进行高级搜索
+		    searchResult, totalCount, err = esService.Search(
+		   	keyword, pageIndex, conf.PageSize, memberId
+		    )
+		    // 处理搜索结果高亮
+		    highlightResults(searchResult)
+		} else {
+		    // 回退到原生数据库搜索
+		    searchResult, totalCount, err = models.NewDocumentSearchResult().FindToPager(
+		  	sqltil.EscapeLike(keyword), pageIndex, conf.PageSize, memberId
+		    )
+		}
 
 		if err != nil {
 			logs.Error("搜索失败 ->", err)
