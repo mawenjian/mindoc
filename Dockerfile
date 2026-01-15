@@ -1,6 +1,6 @@
 FROM golang:bookworm AS build
 
-ARG TAG=1.0.0-beta
+ARG TAG=v2.2-beta.1.aarch64
 
 # 编译-环境变量
 #ENV GO111MODULE=on
@@ -78,6 +78,13 @@ ENV LANG=zh_CN.UTF-8
 ENV LANGUAGE=zh_CN:en
 ENV LC_ALL=zh_CN.UTF-8
 
+#RUN apt install -y pipx libxfixes3
+RUN apt install -y libxfixes3
+#RUN pipx ensurepath
+#RUN pipx install pyqt6
+#RUN pipx install pyqt6-tools
+#RUN pipx install pyqt6-webengine --include-deps
+
 # 安装必要依赖、下载、解压 calibre 并清理缓存
 RUN apt-get install -y --no-install-recommends \
         libglx0 libegl1 libnss3 libxcomposite1 libxkbcommon0 libxdamage1 libxrandr-dev libopengl0 libxtst6 libasound2t64 libxkbfile1\
@@ -95,6 +102,7 @@ ENV PATH="/opt/calibre:$PATH" \
 
 # 测试 calibre 是否可正常使用
 RUN ebook-convert --version
+RUN echo "<html><body>Hello,world!</body></html>" > /index.html && ebook-convert /index.html /index.pdf && sleep 10s && rm -rf /index.html /index.pdf
 
 # refer: https://docs.docker.com/engine/reference/builder/#volume
 VOLUME ["/mindoc/conf","/mindoc/static","/mindoc/views","/mindoc/uploads","/mindoc/runtime","/mindoc/database"]
